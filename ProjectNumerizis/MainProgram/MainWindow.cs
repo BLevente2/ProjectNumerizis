@@ -1,4 +1,5 @@
 using LeviDraw;
+using ProjectNumerizis.MainProgram;
 
 namespace MainProgram;
 
@@ -14,6 +15,7 @@ public partial class MainWindow : Form
     private System.Windows.Forms.Timer _moveTimer;
     private HashSet<Keys> _pressedKeys;
     private float _moveSpeedMultiplier;
+    private TasksWindow _tasksWindow;
 
     public MainWindow(double FPS)
     {
@@ -60,6 +62,8 @@ public partial class MainWindow : Form
         AddNewFunctionButton.MouseLeave += Button_MouseLeave;
         TasksButton.MouseEnter += Button_MouseEnter;
         TasksButton.MouseLeave += Button_MouseLeave;
+
+        _tasksWindow = new TasksWindow();
     }
 
     #endregion
@@ -413,6 +417,11 @@ public partial class MainWindow : Form
 
     private void TasksButton_Click(object sender, EventArgs e)
     {
+        var result = _tasksWindow.ShowDialog();
+        
+        if (result == DialogResult.OK)
+        {
 
+        }
     }
 }

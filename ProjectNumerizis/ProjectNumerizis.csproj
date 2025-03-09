@@ -12,4 +12,10 @@
     <PackageReference Include="MathNet.Symbolics" Version="0.25.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Tasks\NumRootTasks\" />
+    <Folder Include="Tasks\NumIntTasks\" />
+    <Folder Include="Tasks\NumDifTasks\" />
+  </ItemGroup>
+
 </Project>

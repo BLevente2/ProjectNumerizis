@@ -9,14 +9,19 @@ public class CoordinateSystem
     public static readonly Color DEFAULT_POINT_COLOR = Color.Blue;
     public static readonly Color DEFAULT_FUNCTION_COLOR = Color.Orange;
 
-    private double _width;
-    private double _height;
+    private int _width;
+    private int _height;
     private double _offsetX;
     private double _offsetY;
     private double _magnificationMultiplier;
     private List<Function> _hardFunctions;
     private List<List<Function>> _nonHardGroups;
     private int _cachedFunctionsHash;
+    private readonly Color _axesColor;
+    private readonly Pen _axesPen;
+    private readonly Pen _gridPen;
+    private readonly Brush _axesLabelBrush;
+    private readonly Font _axesLabelFont;
 
     public List<PointData> Points {  get; private set; }
     public List<Function> Functions { get; private set; }
@@ -48,7 +53,7 @@ public class CoordinateSystem
         }
     }
 
-    public CoordinateSystem(double width, double height)
+    public CoordinateSystem(int width, int height)
     {
         _width = width;
         _height = height;
@@ -68,6 +73,11 @@ public class CoordinateSystem
         _hardFunctions = new List<Function>();
         _nonHardGroups = new List<List<Function>>();
         _cachedFunctionsHash = 0;
+        _axesColor = SystemColors.WindowText;
+        _gridPen = new Pen(Color.FromArgb(150, _axesColor), 1);
+        _axesPen = new Pen(_axesColor, 3);
+        _axesLabelBrush = new SolidBrush(_axesColor);
+        _axesLabelFont = new Font("Arial", 8);
     }
 
     #endregion
@@ -163,32 +173,53 @@ public class CoordinateSystem
 
     private void DrawSingleFunction(Graphics g, Function function, double scaledGridSpacing)
     {
-        using (Pen functionPen = new Pen(function.FunctionColor, 2))
+        Pen functionPen = function.FunctionPen;
+        List<PointF> segment = new List<PointF>();
+        double prevDerivative = double.NaN;
+        for (double screenX = 0; screenX < _width;)
         {
-            List<PointF> segment = new List<PointF>();
-            double prevDerivative = double.NaN;
-            for (double screenX = 0; screenX < _width;)
+            double coordX = (screenX - _offsetX) / scaledGridSpacing;
+            double coordY = function.Evaluate(coordX);
+            double derivative = function.EvaluateDerivative(coordX);
+            double screenY = _offsetY - coordY * scaledGridSpacing;
+            bool isInvalid = double.IsNaN(coordY) || double.IsInfinity(coordY) || Math.Abs(screenY) > _height * 10;
+            bool breakSegment = false;
+            if (segment.Count > 0)
             {
-                double coordX = (screenX - _offsetX) / scaledGridSpacing;
-                double coordY = function.Evaluate(coordX);
-                double derivative = function.EvaluateDerivative(coordX);
-                double screenY = _offsetY - coordY * scaledGridSpacing;
-                bool isValid = !(double.IsNaN(coordY) || double.IsInfinity(coordY));
-                if (isValid && Math.Abs(screenY) > _height * 10)
-                {
-                    isValid = false;
-                }
-                bool breakSegment = false;
+                if (isInvalid)
+                    breakSegment = true;
+                else if (Math.Abs(derivative - prevDerivative) > TRESHOLD)
+                    breakSegment = true;
+                else if (Math.Abs(derivative) > VERTICAL_SLOPE_LIMIT && Math.Abs(screenY - segment.Last().Y) > (_height / 4.0))
+                    breakSegment = true;
+            }
+            if (breakSegment)
+            {
                 if (segment.Count > 0)
                 {
-                    if (!isValid)
-                        breakSegment = true;
-                    else if (Math.Abs(derivative - prevDerivative) > TRESHOLD)
-                        breakSegment = true;
-                    else if (Math.Abs(derivative) > VERTICAL_SLOPE_LIMIT && Math.Abs(screenY - segment.Last().Y) > (_height / 4.0))
-                        breakSegment = true;
+                    PointF lastPoint = segment.Last();
+                    double lastF = (_offsetY - lastPoint.Y) / scaledGridSpacing;
+                    float edgeY = (float)(lastF > 0 ? 0 : (lastF < 0 ? _height : lastPoint.Y));
+                    g.DrawLine(functionPen, lastPoint.X, lastPoint.Y, lastPoint.X, edgeY);
+                    DrawSegment(g, functionPen, segment);
+                    segment.Clear();
                 }
-                if (breakSegment)
+                if (!isInvalid)
+                {
+                    float edgeY = (float)(coordY > 0 ? 0 : (coordY < 0 ? _height : screenY));
+                    g.DrawLine(functionPen, (float)screenX, edgeY, (float)screenX, (float)screenY);
+                    segment.Add(new PointF((float)screenX, (float)screenY));
+                    prevDerivative = derivative;
+                }
+            }
+            else
+            {
+                if (!isInvalid)
+                {
+                    segment.Add(new PointF((float)screenX, (float)screenY));
+                    prevDerivative = derivative;
+                }
+                else
                 {
                     if (segment.Count > 0)
                     {
@@ -199,44 +230,17 @@ public class CoordinateSystem
                         DrawSegment(g, functionPen, segment);
                         segment.Clear();
                     }
-                    if (isValid)
-                    {
-                        float edgeY = (float)(coordY > 0 ? 0 : (coordY < 0 ? _height : screenY));
-                        g.DrawLine(functionPen, (float)screenX, edgeY, (float)screenX, (float)screenY);
-                        segment.Add(new PointF((float)screenX, (float)screenY));
-                        prevDerivative = derivative;
-                    }
                 }
-                else
-                {
-                    if (isValid)
-                    {
-                        segment.Add(new PointF((float)screenX, (float)screenY));
-                        prevDerivative = derivative;
-                    }
-                    else
-                    {
-                        if (segment.Count > 0)
-                        {
-                            PointF lastPoint = segment.Last();
-                            double lastF = (_offsetY - lastPoint.Y) / scaledGridSpacing;
-                            float edgeY = (float)(lastF > 0 ? 0 : (lastF < 0 ? _height : lastPoint.Y));
-                            g.DrawLine(functionPen, lastPoint.X, lastPoint.Y, lastPoint.X, edgeY);
-                            DrawSegment(g, functionPen, segment);
-                            segment.Clear();
-                        }
-                    }
-                }
-                screenX += GetAdaptiveStepSize(derivative, prevDerivative, function.HardToEvaluate);
             }
-            if (segment.Count > 0)
-            {
-                PointF lastPoint = segment.Last();
-                double lastF = (_offsetY - lastPoint.Y) / scaledGridSpacing;
-                float edgeY = (float)(lastF > 0 ? 0 : (lastF < 0 ? _height : lastPoint.Y));
-                g.DrawLine(functionPen, lastPoint.X, lastPoint.Y, lastPoint.X, edgeY);
-                DrawSegment(g, functionPen, segment);
-            }
+            screenX += GetAdaptiveStepSize(derivative, prevDerivative, function.HardToEvaluate);
+        }
+        if (segment.Count > 0)
+        {
+            PointF lastPoint = segment.Last();
+            double lastF = (_offsetY - lastPoint.Y) / scaledGridSpacing;
+            float edgeY = (float)(lastF > 0 ? 0 : (lastF < 0 ? _height : lastPoint.Y));
+            g.DrawLine(functionPen, lastPoint.X, lastPoint.Y, lastPoint.X, edgeY);
+            DrawSegment(g, functionPen, segment);
         }
     }
 
@@ -258,30 +262,27 @@ public class CoordinateSystem
         double adaptiveStep = maxStep * factor;
         return Math.Clamp(adaptiveStep, minStep, maxStep);
     }
-    private void DrawGrid(Graphics g, Pen gridPen)
+    private void DrawGrid(Graphics g)
     {
         for (double i = _offsetX % GridSpacing; i < _width; i += GridSpacing)
         {
-            g.DrawLine(gridPen, (float)i, 0, (float)i, (float)_height);
+            g.DrawLine(_gridPen, (float)i, 0, (float)i, _height);
         }
 
         for (double i = _offsetY % GridSpacing; i < _height; i += GridSpacing)
         {
-            g.DrawLine(gridPen, 0, (float)i, (float)_width, (float)i);
+            g.DrawLine(_gridPen, 0, (float)i, _width, (float)i);
         }
     }
 
-    private void DrawAxes(Graphics g, Pen axesPen)
+    private void DrawAxes(Graphics g)
     {
-        g.DrawLine(axesPen, (float)_offsetX, 0, (float)_offsetX, (float)_height);
-        g.DrawLine(axesPen, 0, (float)_offsetY, (float)_width, (float)_offsetY);
+        g.DrawLine(_axesPen, (float)_offsetX, 0, (float)_offsetX, _height);
+        g.DrawLine(_axesPen, 0, (float)_offsetY, _width, (float)_offsetY);
     }
 
-    private void DrawAxesLables(Graphics g, Color axesColor)
+    private void DrawAxesLables(Graphics g)
     {
-        Font font = new Font("Arial", 8);
-        Brush textBrush = new SolidBrush(axesColor);
-
         for (double i = 1; i <= (_width - _offsetX) / GridSpacing; i++)
         {
             if (i % 5 == 0)
@@ -289,9 +290,9 @@ public class CoordinateSystem
                 string labelPos = (i / _magnificationMultiplier).ToString("0.###");
                 string labelNeg = (-i / _magnificationMultiplier).ToString("0.###");
 
-                g.DrawString(labelPos, font, textBrush,
+                g.DrawString(labelPos, _axesLabelFont, _axesLabelBrush,
                     (float)(_offsetX + i * GridSpacing - 10), (float)(_offsetY + 5));
-                g.DrawString(labelNeg, font, textBrush,
+                g.DrawString(labelNeg, _axesLabelFont, _axesLabelBrush,
                     (float)(_offsetX - i * GridSpacing - 10), (float)(_offsetY + 5));
             }
         }
@@ -303,9 +304,9 @@ public class CoordinateSystem
                 string labelPos = (i / _magnificationMultiplier).ToString("0.###");
                 string labelNeg = (-i / _magnificationMultiplier).ToString("0.###");
 
-                g.DrawString(labelPos, font, textBrush,
+                g.DrawString(labelPos, _axesLabelFont, _axesLabelBrush,
                     (float)(_offsetX + 5), (float)(_offsetY - i * GridSpacing - 8));
-                g.DrawString(labelNeg, font, textBrush,
+                g.DrawString(labelNeg, _axesLabelFont, _axesLabelBrush,
                     (float)(_offsetX + 5), (float)(_offsetY + i * GridSpacing - 8));
             }
         }
@@ -338,22 +339,18 @@ public class CoordinateSystem
     {
         g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-        Color axesColor = SystemColors.WindowText;
-
         if (RenderGridLines)
         {
-            Pen gridPen = new Pen(Color.FromArgb(150, axesColor), 1);
-            DrawGrid(g, gridPen);
+            DrawGrid(g);
         }
 
         if (RenderAxes)
         {
-            Pen axesPen = new Pen(axesColor, 3);
-            DrawAxes(g, axesPen);
+            DrawAxes(g);
 
             if (RenderAxisLabels)
             {
-                DrawAxesLables(g, axesColor);
+                DrawAxesLables(g);
             }
         }
 
@@ -372,7 +369,7 @@ public class CoordinateSystem
 
     #region Utilities
 
-    public void Resize(double newWidth, double newHeight)
+    public void Resize(int newWidth, int newHeight)
     {
         this._width = newWidth;
         this._height = newHeight;

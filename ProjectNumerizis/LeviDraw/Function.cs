@@ -5,9 +5,12 @@ namespace LeviDraw;
 
 public class Function : IDisposable
 {
-    private readonly Expr _expression;
-    private readonly Func<double, double> _compiledFunction;
-    private readonly Func<double, double> _compiledDerivative;
+    #region PropertiesAndConstructors
+
+    private Expr _expression;
+    private Func<double, double> _compiledFunction;
+    private Func<double, double> _compiledDerivative;
+    private Func<double, double>? _compiledSecondDerivative;
     private Dictionary<double, (double Y, double Derivative)> _cache = new Dictionary<double, (double, double)>();
     private LinkedList<double> _cacheOrder = new LinkedList<double>();
     private object _cacheLock = new object();
@@ -20,6 +23,8 @@ public class Function : IDisposable
     public bool Enabled { get; set; }
     public double LastEvaluationOfDerivative { get; set; }
     public bool HardToEvaluate { get; private set; }
+    public Pen FunctionPen { get; private set; }
+    public const int FunctionPenWidth = 2;
 
     public Function(string name, string function, Color functionColor)
     {
@@ -38,6 +43,7 @@ public class Function : IDisposable
         _compiledDerivative = derivative.Compile("x");
         Name = name;
         FunctionColor = functionColor;
+        FunctionPen = new Pen(functionColor, FunctionPenWidth);
         Enabled = true;
         LastEvaluationOfDerivative = double.NaN;
         string exprStr = _expression.ToString().ToLowerInvariant();
@@ -73,11 +79,57 @@ public class Function : IDisposable
                 MaxCacheSize = NotHardMaxCacheSize;
             }
         }
+
+        try
+        {
+            var secondDerivativeExpr = derivative.Differentiate("x");
+            _compiledSecondDerivative = secondDerivativeExpr.Compile("x");
+        }
+        catch
+        {
+            _compiledSecondDerivative = null;
+        }
     }
+
+    #endregion
+
+    #region Utilities
+
+    public void ChangeExpression(string newExpression)
+    {
+        _expression = Expr.Parse(newExpression);
+        Expr derivative;
+        try
+        {
+            derivative = _expression.Differentiate("x");
+        }
+        catch
+        {
+            throw new InvalidOperationException("The function is not differentiable.");
+        }
+        _compiledFunction = _expression.Compile("x");
+        _compiledDerivative = derivative.Compile("x");
+        try
+        {
+            var secondDerivativeExpr = derivative.Differentiate("x");
+            _compiledSecondDerivative = secondDerivativeExpr.Compile("x");
+        }
+        catch
+        {
+            _compiledSecondDerivative = null;
+        }
+        lock (_cacheLock)
+        {
+            _cache.Clear();
+            _cacheOrder.Clear();
+        }
+    }
+
     private double Quantize(double x)
     {
         return Math.Round(x, 6);
     }
+
     private void AddToCache(double key, (double Y, double Derivative) value)
     {
         lock (_cacheLock)
@@ -99,6 +151,7 @@ public class Function : IDisposable
             _cacheOrder.AddFirst(key);
         }
     }
+
     private bool TryGetFromCache(double key, out (double Y, double Derivative) value)
     {
         lock (_cacheLock)
@@ -112,6 +165,7 @@ public class Function : IDisposable
             return false;
         }
     }
+
     public double Evaluate(double x)
     {
         double key = Quantize(x);
@@ -138,6 +192,7 @@ public class Function : IDisposable
         AddToCache(key, (y, d));
         return y;
     }
+
     public double EvaluateDerivative(double x)
     {
         double key = Quantize(x);
@@ -164,6 +219,21 @@ public class Function : IDisposable
         AddToCache(key, (y, d));
         return d;
     }
+
+    public double? EvaluateSecondDerivative(double x)
+    {
+        if (_compiledSecondDerivative == null)
+            return null;
+        try
+        {
+            return _compiledSecondDerivative(x);
+        }
+        catch
+        {
+            return double.NaN;
+        }
+    }
+
     public void Dispose()
     {
         Dispose(true);
@@ -188,4 +258,6 @@ public class Function : IDisposable
     {
         Dispose(false);
     }
+
+    #endregion
 }

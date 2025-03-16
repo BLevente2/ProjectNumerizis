@@ -29,22 +29,19 @@
         private void InitializeComponent()
         {
             ViewsPanel = new Panel();
-            NumRootViewButton = new Button();
-            NumIntViewButton = new Button();
-            NumDifViewButton = new Button();
+            ViewsList = new ListBox();
             NumDifTasksPanel = new Panel();
-            button2 = new Button();
-            button3 = new Button();
-            button4 = new Button();
+            NumDifTasks = new ListBox();
             NumIntTasksPanel = new Panel();
-            button1 = new Button();
-            button5 = new Button();
-            button6 = new Button();
             NumRootTasksPanel = new Panel();
-            button7 = new Button();
-            button8 = new Button();
-            button9 = new Button();
             TaskArgumentsPanel = new Panel();
+            ArgsList = new RichTextBox();
+            Arg6Box = new TextBox();
+            Arg5Box = new TextBox();
+            Arg4Box = new TextBox();
+            Arg3Box = new TextBox();
+            Arg2Box = new TextBox();
+            Arg1Box = new TextBox();
             TaskArgumentsLabel = new Label();
             ControlPanel = new Panel();
             CancelButton = new Button();
@@ -57,8 +54,6 @@
             SolutionLabel = new Label();
             ViewsPanel.SuspendLayout();
             NumDifTasksPanel.SuspendLayout();
-            NumIntTasksPanel.SuspendLayout();
-            NumRootTasksPanel.SuspendLayout();
             TaskArgumentsPanel.SuspendLayout();
             ControlPanel.SuspendLayout();
             SolutionPanel.SuspendLayout();
@@ -68,204 +63,158 @@
             // ViewsPanel
             // 
             ViewsPanel.BorderStyle = BorderStyle.FixedSingle;
-            ViewsPanel.Controls.Add(NumRootViewButton);
-            ViewsPanel.Controls.Add(NumIntViewButton);
-            ViewsPanel.Controls.Add(NumDifViewButton);
+            ViewsPanel.Controls.Add(ViewsList);
             ViewsPanel.Dock = DockStyle.Left;
             ViewsPanel.Location = new Point(0, 0);
             ViewsPanel.Name = "ViewsPanel";
-            ViewsPanel.Size = new Size(213, 697);
+            ViewsPanel.Size = new Size(213, 597);
             ViewsPanel.TabIndex = 0;
             // 
-            // NumRootViewButton
+            // ViewsList
             // 
-            NumRootViewButton.Dock = DockStyle.Top;
-            NumRootViewButton.FlatStyle = FlatStyle.Flat;
-            NumRootViewButton.Font = new Font("Nirmala UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            NumRootViewButton.Location = new Point(0, 274);
-            NumRootViewButton.Name = "NumRootViewButton";
-            NumRootViewButton.Size = new Size(211, 137);
-            NumRootViewButton.TabIndex = 2;
-            NumRootViewButton.Text = "Numerical Root-finding";
-            NumRootViewButton.UseVisualStyleBackColor = true;
-            // 
-            // NumIntViewButton
-            // 
-            NumIntViewButton.Dock = DockStyle.Top;
-            NumIntViewButton.FlatStyle = FlatStyle.Flat;
-            NumIntViewButton.Font = new Font("Nirmala UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            NumIntViewButton.Location = new Point(0, 137);
-            NumIntViewButton.Name = "NumIntViewButton";
-            NumIntViewButton.Size = new Size(211, 137);
-            NumIntViewButton.TabIndex = 1;
-            NumIntViewButton.Text = "Numerical Integration";
-            NumIntViewButton.UseVisualStyleBackColor = true;
-            // 
-            // NumDifViewButton
-            // 
-            NumDifViewButton.Dock = DockStyle.Top;
-            NumDifViewButton.FlatStyle = FlatStyle.Flat;
-            NumDifViewButton.Font = new Font("Nirmala UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            NumDifViewButton.Location = new Point(0, 0);
-            NumDifViewButton.Name = "NumDifViewButton";
-            NumDifViewButton.Size = new Size(211, 137);
-            NumDifViewButton.TabIndex = 0;
-            NumDifViewButton.Text = "Numerical Differentiation";
-            NumDifViewButton.UseVisualStyleBackColor = true;
+            ViewsList.BorderStyle = BorderStyle.None;
+            ViewsList.DisplayMember = "0";
+            ViewsList.Dock = DockStyle.Fill;
+            ViewsList.DrawMode = DrawMode.OwnerDrawFixed;
+            ViewsList.Font = new Font("Nirmala UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ViewsList.FormattingEnabled = true;
+            ViewsList.ItemHeight = 200;
+            ViewsList.Items.AddRange(new object[] { "Num Dif", "Num Int", "Num Root" });
+            ViewsList.Location = new Point(0, 0);
+            ViewsList.MaximumSize = new Size(400, 700);
+            ViewsList.Name = "ViewsList";
+            ViewsList.Size = new Size(211, 595);
+            ViewsList.TabIndex = 0;
             // 
             // NumDifTasksPanel
             // 
             NumDifTasksPanel.BorderStyle = BorderStyle.FixedSingle;
-            NumDifTasksPanel.Controls.Add(button2);
-            NumDifTasksPanel.Controls.Add(button3);
-            NumDifTasksPanel.Controls.Add(button4);
+            NumDifTasksPanel.Controls.Add(NumDifTasks);
             NumDifTasksPanel.Dock = DockStyle.Left;
             NumDifTasksPanel.Location = new Point(213, 0);
             NumDifTasksPanel.Name = "NumDifTasksPanel";
-            NumDifTasksPanel.Size = new Size(213, 697);
+            NumDifTasksPanel.Size = new Size(213, 597);
             NumDifTasksPanel.TabIndex = 2;
             // 
-            // button2
+            // NumDifTasks
             // 
-            button2.Dock = DockStyle.Top;
-            button2.FlatStyle = FlatStyle.Flat;
-            button2.Font = new Font("Nirmala UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button2.Location = new Point(0, 274);
-            button2.Name = "button2";
-            button2.Size = new Size(211, 137);
-            button2.TabIndex = 2;
-            button2.Text = "Numerical Root-finding";
-            button2.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            button3.Dock = DockStyle.Top;
-            button3.FlatStyle = FlatStyle.Flat;
-            button3.Font = new Font("Nirmala UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button3.Location = new Point(0, 137);
-            button3.Name = "button3";
-            button3.Size = new Size(211, 137);
-            button3.TabIndex = 1;
-            button3.Text = "Numerical Integration";
-            button3.UseVisualStyleBackColor = true;
-            // 
-            // button4
-            // 
-            button4.Dock = DockStyle.Top;
-            button4.FlatStyle = FlatStyle.Flat;
-            button4.Font = new Font("Nirmala UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button4.Location = new Point(0, 0);
-            button4.Name = "button4";
-            button4.Size = new Size(211, 137);
-            button4.TabIndex = 0;
-            button4.Text = "Numerical Differentiation";
-            button4.UseVisualStyleBackColor = true;
+            NumDifTasks.BorderStyle = BorderStyle.None;
+            NumDifTasks.DisplayMember = "0";
+            NumDifTasks.Dock = DockStyle.Fill;
+            NumDifTasks.DrawMode = DrawMode.OwnerDrawFixed;
+            NumDifTasks.Font = new Font("Nirmala UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            NumDifTasks.FormattingEnabled = true;
+            NumDifTasks.ItemHeight = 50;
+            NumDifTasks.Items.AddRange(new object[] { "Forward dif", "Central dif", "Central 2.dif", "Lagrange 1o.", "Lagrange 2o.", "Newton forw.", "Newton backw.", "Newton 2.dif" });
+            NumDifTasks.Location = new Point(0, 0);
+            NumDifTasks.MaximumSize = new Size(400, 700);
+            NumDifTasks.Name = "NumDifTasks";
+            NumDifTasks.Size = new Size(211, 595);
+            NumDifTasks.TabIndex = 1;
             // 
             // NumIntTasksPanel
             // 
             NumIntTasksPanel.BorderStyle = BorderStyle.FixedSingle;
-            NumIntTasksPanel.Controls.Add(button1);
-            NumIntTasksPanel.Controls.Add(button5);
-            NumIntTasksPanel.Controls.Add(button6);
             NumIntTasksPanel.Dock = DockStyle.Left;
             NumIntTasksPanel.Location = new Point(426, 0);
             NumIntTasksPanel.Name = "NumIntTasksPanel";
-            NumIntTasksPanel.Size = new Size(213, 697);
+            NumIntTasksPanel.Size = new Size(213, 597);
             NumIntTasksPanel.TabIndex = 3;
-            // 
-            // button1
-            // 
-            button1.Dock = DockStyle.Top;
-            button1.FlatStyle = FlatStyle.Flat;
-            button1.Font = new Font("Nirmala UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button1.Location = new Point(0, 274);
-            button1.Name = "button1";
-            button1.Size = new Size(211, 137);
-            button1.TabIndex = 2;
-            button1.Text = "Numerical Root-finding";
-            button1.UseVisualStyleBackColor = true;
-            // 
-            // button5
-            // 
-            button5.Dock = DockStyle.Top;
-            button5.FlatStyle = FlatStyle.Flat;
-            button5.Font = new Font("Nirmala UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button5.Location = new Point(0, 137);
-            button5.Name = "button5";
-            button5.Size = new Size(211, 137);
-            button5.TabIndex = 1;
-            button5.Text = "Numerical Integration";
-            button5.UseVisualStyleBackColor = true;
-            // 
-            // button6
-            // 
-            button6.Dock = DockStyle.Top;
-            button6.FlatStyle = FlatStyle.Flat;
-            button6.Font = new Font("Nirmala UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button6.Location = new Point(0, 0);
-            button6.Name = "button6";
-            button6.Size = new Size(211, 137);
-            button6.TabIndex = 0;
-            button6.Text = "Numerical Differentiation";
-            button6.UseVisualStyleBackColor = true;
             // 
             // NumRootTasksPanel
             // 
             NumRootTasksPanel.BorderStyle = BorderStyle.FixedSingle;
-            NumRootTasksPanel.Controls.Add(button7);
-            NumRootTasksPanel.Controls.Add(button8);
-            NumRootTasksPanel.Controls.Add(button9);
             NumRootTasksPanel.Dock = DockStyle.Left;
             NumRootTasksPanel.Location = new Point(639, 0);
             NumRootTasksPanel.Name = "NumRootTasksPanel";
-            NumRootTasksPanel.Size = new Size(213, 697);
+            NumRootTasksPanel.Size = new Size(213, 597);
             NumRootTasksPanel.TabIndex = 4;
-            // 
-            // button7
-            // 
-            button7.Dock = DockStyle.Top;
-            button7.FlatStyle = FlatStyle.Flat;
-            button7.Font = new Font("Nirmala UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button7.Location = new Point(0, 274);
-            button7.Name = "button7";
-            button7.Size = new Size(211, 137);
-            button7.TabIndex = 2;
-            button7.Text = "Numerical Root-finding";
-            button7.UseVisualStyleBackColor = true;
-            // 
-            // button8
-            // 
-            button8.Dock = DockStyle.Top;
-            button8.FlatStyle = FlatStyle.Flat;
-            button8.Font = new Font("Nirmala UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button8.Location = new Point(0, 137);
-            button8.Name = "button8";
-            button8.Size = new Size(211, 137);
-            button8.TabIndex = 1;
-            button8.Text = "Numerical Integration";
-            button8.UseVisualStyleBackColor = true;
-            // 
-            // button9
-            // 
-            button9.Dock = DockStyle.Top;
-            button9.FlatStyle = FlatStyle.Flat;
-            button9.Font = new Font("Nirmala UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button9.Location = new Point(0, 0);
-            button9.Name = "button9";
-            button9.Size = new Size(211, 137);
-            button9.TabIndex = 0;
-            button9.Text = "Numerical Differentiation";
-            button9.UseVisualStyleBackColor = true;
             // 
             // TaskArgumentsPanel
             // 
             TaskArgumentsPanel.BorderStyle = BorderStyle.FixedSingle;
+            TaskArgumentsPanel.Controls.Add(ArgsList);
+            TaskArgumentsPanel.Controls.Add(Arg6Box);
+            TaskArgumentsPanel.Controls.Add(Arg5Box);
+            TaskArgumentsPanel.Controls.Add(Arg4Box);
+            TaskArgumentsPanel.Controls.Add(Arg3Box);
+            TaskArgumentsPanel.Controls.Add(Arg2Box);
+            TaskArgumentsPanel.Controls.Add(Arg1Box);
             TaskArgumentsPanel.Controls.Add(TaskArgumentsLabel);
             TaskArgumentsPanel.Dock = DockStyle.Left;
             TaskArgumentsPanel.Location = new Point(852, 0);
             TaskArgumentsPanel.Name = "TaskArgumentsPanel";
-            TaskArgumentsPanel.Size = new Size(275, 697);
+            TaskArgumentsPanel.Size = new Size(275, 597);
             TaskArgumentsPanel.TabIndex = 5;
+            // 
+            // ArgsList
+            // 
+            ArgsList.Dock = DockStyle.Fill;
+            ArgsList.Location = new Point(0, 285);
+            ArgsList.Name = "ArgsList";
+            ArgsList.Size = new Size(273, 310);
+            ArgsList.TabIndex = 7;
+            ArgsList.Text = "";
+            // 
+            // Arg6Box
+            // 
+            Arg6Box.Dock = DockStyle.Top;
+            Arg6Box.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            Arg6Box.Location = new Point(0, 246);
+            Arg6Box.Name = "Arg6Box";
+            Arg6Box.Size = new Size(273, 39);
+            Arg6Box.TabIndex = 6;
+            Arg6Box.TextAlign = HorizontalAlignment.Center;
+            // 
+            // Arg5Box
+            // 
+            Arg5Box.Dock = DockStyle.Top;
+            Arg5Box.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            Arg5Box.Location = new Point(0, 207);
+            Arg5Box.Name = "Arg5Box";
+            Arg5Box.Size = new Size(273, 39);
+            Arg5Box.TabIndex = 5;
+            Arg5Box.TextAlign = HorizontalAlignment.Center;
+            // 
+            // Arg4Box
+            // 
+            Arg4Box.Dock = DockStyle.Top;
+            Arg4Box.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            Arg4Box.Location = new Point(0, 168);
+            Arg4Box.Name = "Arg4Box";
+            Arg4Box.Size = new Size(273, 39);
+            Arg4Box.TabIndex = 4;
+            Arg4Box.TextAlign = HorizontalAlignment.Center;
+            // 
+            // Arg3Box
+            // 
+            Arg3Box.Dock = DockStyle.Top;
+            Arg3Box.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            Arg3Box.Location = new Point(0, 129);
+            Arg3Box.Name = "Arg3Box";
+            Arg3Box.Size = new Size(273, 39);
+            Arg3Box.TabIndex = 3;
+            Arg3Box.TextAlign = HorizontalAlignment.Center;
+            // 
+            // Arg2Box
+            // 
+            Arg2Box.Dock = DockStyle.Top;
+            Arg2Box.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            Arg2Box.Location = new Point(0, 90);
+            Arg2Box.Name = "Arg2Box";
+            Arg2Box.Size = new Size(273, 39);
+            Arg2Box.TabIndex = 2;
+            Arg2Box.TextAlign = HorizontalAlignment.Center;
+            // 
+            // Arg1Box
+            // 
+            Arg1Box.Dock = DockStyle.Top;
+            Arg1Box.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            Arg1Box.Location = new Point(0, 51);
+            Arg1Box.Name = "Arg1Box";
+            Arg1Box.Size = new Size(273, 39);
+            Arg1Box.TabIndex = 1;
+            Arg1Box.TextAlign = HorizontalAlignment.Center;
             // 
             // TaskArgumentsLabel
             // 
@@ -274,8 +223,8 @@
             TaskArgumentsLabel.Font = new Font("Nirmala UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
             TaskArgumentsLabel.Location = new Point(0, 0);
             TaskArgumentsLabel.Name = "TaskArgumentsLabel";
-            TaskArgumentsLabel.Padding = new Padding(25, 5, 0, 0);
-            TaskArgumentsLabel.Size = new Size(234, 41);
+            TaskArgumentsLabel.Padding = new Padding(25, 5, 0, 10);
+            TaskArgumentsLabel.Size = new Size(234, 51);
             TaskArgumentsLabel.TabIndex = 0;
             TaskArgumentsLabel.Text = "Task Arguments";
             TaskArgumentsLabel.TextAlign = ContentAlignment.MiddleCenter;
@@ -287,9 +236,9 @@
             ControlPanel.Controls.Add(CalculateButton);
             ControlPanel.Controls.Add(DrawButton);
             ControlPanel.Dock = DockStyle.Bottom;
-            ControlPanel.Location = new Point(1127, 624);
+            ControlPanel.Location = new Point(1127, 524);
             ControlPanel.Name = "ControlPanel";
-            ControlPanel.Size = new Size(824, 73);
+            ControlPanel.Size = new Size(724, 73);
             ControlPanel.TabIndex = 6;
             // 
             // CancelButton
@@ -297,7 +246,7 @@
             CancelButton.Dock = DockStyle.Right;
             CancelButton.FlatStyle = FlatStyle.Flat;
             CancelButton.Font = new Font("Segoe UI", 15F, FontStyle.Bold, GraphicsUnit.Point, 238);
-            CancelButton.Location = new Point(159, 0);
+            CancelButton.Location = new Point(59, 0);
             CancelButton.Name = "CancelButton";
             CancelButton.Size = new Size(221, 71);
             CancelButton.TabIndex = 2;
@@ -310,7 +259,7 @@
             CalculateButton.Dock = DockStyle.Right;
             CalculateButton.FlatStyle = FlatStyle.Flat;
             CalculateButton.Font = new Font("Segoe UI", 15F, FontStyle.Bold, GraphicsUnit.Point, 238);
-            CalculateButton.Location = new Point(380, 0);
+            CalculateButton.Location = new Point(280, 0);
             CalculateButton.Name = "CalculateButton";
             CalculateButton.Size = new Size(221, 71);
             CalculateButton.TabIndex = 1;
@@ -323,7 +272,7 @@
             DrawButton.Dock = DockStyle.Right;
             DrawButton.FlatStyle = FlatStyle.Flat;
             DrawButton.Font = new Font("Segoe UI", 15F, FontStyle.Bold, GraphicsUnit.Point, 238);
-            DrawButton.Location = new Point(601, 0);
+            DrawButton.Location = new Point(501, 0);
             DrawButton.Name = "DrawButton";
             DrawButton.Size = new Size(221, 71);
             DrawButton.TabIndex = 0;
@@ -340,7 +289,7 @@
             SolutionPanel.Location = new Point(1127, 0);
             SolutionPanel.Name = "SolutionPanel";
             SolutionPanel.Padding = new Padding(20, 0, 0, 0);
-            SolutionPanel.Size = new Size(824, 624);
+            SolutionPanel.Size = new Size(724, 524);
             SolutionPanel.TabIndex = 7;
             // 
             // SolutionBox
@@ -351,7 +300,7 @@
             SolutionBox.Location = new Point(20, 63);
             SolutionBox.Name = "SolutionBox";
             SolutionBox.ReadOnly = true;
-            SolutionBox.Size = new Size(802, 559);
+            SolutionBox.Size = new Size(702, 459);
             SolutionBox.TabIndex = 1;
             SolutionBox.Text = "You will se the solution of the task here!";
             // 
@@ -362,7 +311,7 @@
             SolutionHeaderPanel.Dock = DockStyle.Top;
             SolutionHeaderPanel.Location = new Point(20, 0);
             SolutionHeaderPanel.Name = "SolutionHeaderPanel";
-            SolutionHeaderPanel.Size = new Size(802, 63);
+            SolutionHeaderPanel.Size = new Size(702, 63);
             SolutionHeaderPanel.TabIndex = 0;
             // 
             // CopySolutionButton
@@ -370,7 +319,7 @@
             CopySolutionButton.Dock = DockStyle.Right;
             CopySolutionButton.FlatStyle = FlatStyle.Flat;
             CopySolutionButton.Font = new Font("Segoe UI", 15F, FontStyle.Bold, GraphicsUnit.Point, 238);
-            CopySolutionButton.Location = new Point(508, 0);
+            CopySolutionButton.Location = new Point(408, 0);
             CopySolutionButton.Name = "CopySolutionButton";
             CopySolutionButton.Size = new Size(294, 63);
             CopySolutionButton.TabIndex = 3;
@@ -397,7 +346,7 @@
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
-            ClientSize = new Size(1951, 697);
+            ClientSize = new Size(1851, 597);
             ControlBox = false;
             Controls.Add(SolutionPanel);
             Controls.Add(ControlPanel);
@@ -415,8 +364,6 @@
             TopMost = true;
             ViewsPanel.ResumeLayout(false);
             NumDifTasksPanel.ResumeLayout(false);
-            NumIntTasksPanel.ResumeLayout(false);
-            NumRootTasksPanel.ResumeLayout(false);
             TaskArgumentsPanel.ResumeLayout(false);
             TaskArgumentsPanel.PerformLayout();
             ControlPanel.ResumeLayout(false);
@@ -429,21 +376,9 @@
         #endregion
 
         private Panel ViewsPanel;
-        private Button NumDifViewButton;
-        private Button NumRootViewButton;
-        private Button NumIntViewButton;
         private Panel NumDifTasksPanel;
-        private Button button2;
-        private Button button3;
-        private Button button4;
         private Panel NumIntTasksPanel;
-        private Button button1;
-        private Button button5;
-        private Button button6;
         private Panel NumRootTasksPanel;
-        private Button button7;
-        private Button button8;
-        private Button button9;
         private Panel TaskArgumentsPanel;
         private Label TaskArgumentsLabel;
         private Panel ControlPanel;
@@ -455,5 +390,14 @@
         private Panel SolutionHeaderPanel;
         private Button CopySolutionButton;
         private Label SolutionLabel;
+        private ListBox ViewsList;
+        private ListBox NumDifTasks;
+        private TextBox Arg1Box;
+        private TextBox Arg6Box;
+        private TextBox Arg5Box;
+        private TextBox Arg4Box;
+        private TextBox Arg3Box;
+        private TextBox Arg2Box;
+        private RichTextBox ArgsList;
     }
 }

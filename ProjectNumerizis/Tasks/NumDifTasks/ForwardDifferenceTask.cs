@@ -23,9 +23,9 @@ internal class ForwardDifferenceTask : BaseNumDifTask
 
         TaskSolution.Clear();
         TaskSolution.Append("Numerical Analysis Solution Using Forward Difference:\n");
-        TaskSolution.Append($"f(x) = {fx}");
-        TaskSolution.Append($"f'x = {dfx}");
-        TaskSolution.Append($"f'({x}) = {ActualDif}");
+        TaskSolution.Append($"f(x) = {fx}\n");
+        TaskSolution.Append($"f'x = {dfx}\n");
+        TaskSolution.Append($"f'({x}) = {ActualDif}\n");
         TaskSolution.Append($"Step 1: Define function f(x) at x = {x}\n");
         TaskSolution.Append($"f({x}) = {f_x}\n");
         TaskSolution.Append($"Step 2: Compute f(x + h) where h = {h}\n");
@@ -34,5 +34,7 @@ internal class ForwardDifferenceTask : BaseNumDifTask
         TaskSolution.Append($"f'({x}) ≈ (f({x} + {h}) - f({x})) / h\n");
         TaskSolution.Append($"f'({x}) ≈ ({f_x_h} - {f_x}) / {h}\n");
         TaskSolution.Append($"f'({x}) ≈ {derivative}\n");
+
+        TaskResult = derivative;
     }
 }

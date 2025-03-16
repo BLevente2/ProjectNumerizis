@@ -465,7 +465,14 @@ public partial class MainWindow : Form
         
         if (result == DialogResult.OK)
         {
-
+            if (_tasksWindow.SelectedTask == null)
+            {
+                MessageBox.Show("There were no task selected, so it can not be drawn!");
+            }
+            else
+            {
+                _tasksWindow.SelectedTask.Simulate(this);
+            }
         }
     }
 }

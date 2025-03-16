@@ -461,6 +461,11 @@ public partial class MainWindow : Form
 
     private void TasksButton_Click(object sender, EventArgs e)
     {
+        if (_tasksWindow.SelectedTask != null)
+        {
+            _tasksWindow.SelectedTask.EndSimulation(this);
+        }
+
         var result = _tasksWindow.ShowDialog();
         
         if (result == DialogResult.OK)

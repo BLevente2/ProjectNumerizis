@@ -1,5 +1,6 @@
 ﻿using LeviDraw;
 using MainProgram;
+using System.Globalization;
 using System.Text;
 
 namespace ProjectNumerizis.Tasks.NumDifTasks;
@@ -14,6 +15,24 @@ internal class LagrangeFirstOrderTask : BaseNumDifTask
 
     }
 
+    public override void Simulate(MainWindow mainWindow)
+    {
+        base.Simulate(mainWindow);
+        foreach (PointData point in InterpolationPoints)
+        {
+            mainWindow.AddPoint(point);
+        }
+    }
+
+    public override void EndSimulation(MainWindow mainWindow)
+    {
+        base.EndSimulation(mainWindow);
+        foreach(PointData point in InterpolationPoints)
+        {
+            mainWindow.RemovePoint(point);
+        }
+    }
+
     private static string LagrangeInterpolation(List<PointData> interpolationPoints)
     {
         int n = interpolationPoints.Count;
@@ -25,15 +44,17 @@ internal class LagrangeFirstOrderTask : BaseNumDifTask
         for (int i = 0; i < n; i++)
         {
             StringBuilder term = new StringBuilder();
-            term.Append($"{y[i]}");
+            term.Append(CultureInfo.InvariantCulture, $"{y[i]:0.######}");
+
             for (int j = 0; j < n; j++)
             {
                 if (i != j)
                 {
-                    term.Append($" * (x - {x[j]}) / ({x[i] - x[j]})");
+                    term.AppendFormat(CultureInfo.InvariantCulture, " * (x - {0:0.######}) / ({1:0.######})", x[j], x[i] - x[j]);
                 }
             }
-            if (i > 0) functionExpression.Append(" + ");
+
+            if (i > 0 && y[i] >= 0) functionExpression.Append(" + ");
             functionExpression.Append(term);
         }
 
@@ -48,36 +69,60 @@ internal class LagrangeFirstOrderTask : BaseNumDifTask
         List<double> y = InterpolationPoints.Select(p => p.Y).ToList();
 
         double derivative = 0.0;
+        StringBuilder derivativeBreakdown = new StringBuilder();
+
         for (int i = 0; i < n; i++)
         {
-            double term = y[i];
+            double term = 0.0;
+            StringBuilder termBreakdown = new StringBuilder($"[ y{i} * (");
+
             for (int j = 0; j < n; j++)
             {
                 if (i != j)
                 {
-                    term /= (x[i] - x[j]);
+                    double product = 1.0;
+                    StringBuilder productBreakdown = new StringBuilder();
+
+                    for (int k = 0; k < n; k++)
+                    {
+                        if (k != i && k != j)
+                        {
+                            product *= (x0 - x[k]) / (x[i] - x[k]);
+                            productBreakdown.AppendFormat("(x0 - {0}) / ({1} - {2}) * ", x[k], x[i], x[k]);
+                        }
+                    }
+
+                    term += (1.0 / (x[i] - x[j])) * product;
+                    termBreakdown.AppendFormat("(1 / ({0} - {1})) * {2} ) + ", x[i], x[j], productBreakdown.ToString().TrimEnd('*', ' '));
                 }
             }
-            derivative += term;
+
+            derivative += y[i] * term;
+            derivativeBreakdown.AppendLine(termBreakdown.ToString().TrimEnd('+', ' ') + "]");
         }
 
-        string fx = OriginalFunction.FunctionExpression;
-        string dfx = OriginalFunction.DerivativeFunction;
         NumDifPoint = new PointData(x0, derivative, NumDifPointDefColor);
 
         TaskSolution.Clear();
-        TaskSolution.Append("Numerical Analysis Solution Using Lagrange First Order Derivative:");
-        TaskSolution.Append($"f(x) = {fx}");
-        TaskSolution.Append($"f'x = {dfx}");
-        TaskSolution.Append($"f'({x0}) = {ActualDif}");
-        TaskSolution.Append("Step 1: Define given interpolation points:");
+        TaskSolution.AppendLine("=== Numerical Analysis: Lagrange First Order Derivative ===");
+        TaskSolution.AppendLine($"Given function f(x):\n  f(x) = {OriginalFunction.FunctionExpression}");
+        TaskSolution.AppendLine($"First-order derivative f'(x):\n  f'(x) = {OriginalFunction.DerivativeFunction}");
+        TaskSolution.AppendLine($"Approximated derivative at x = {x0}:");
+        TaskSolution.AppendLine($"  f'({x0}) ≈ {derivative}");
+        TaskSolution.AppendLine("\n--- Step 1: Define Interpolation Points ---");
+
         for (int i = 0; i < n; i++)
         {
-            TaskSolution.Append($"P{i}: ({x[i]}, {y[i]})");
+            TaskSolution.AppendLine($"  P{i}: ({x[i]}, {y[i]})");
         }
-        TaskSolution.Append("Step 2: Apply Lagrange Interpolation Formula:");
-        TaskSolution.Append($"f'({x0}) ≈ Σ (y[i] * Π (1 / (x[i] - x[j])) for i ≠ j)");
-        TaskSolution.Append($"f'({x0}) ≈ {derivative}");
+
+        TaskSolution.AppendLine("\n--- Step 2: Compute Lagrange Derivative ---");
+        TaskSolution.AppendLine("Using the formula:");
+        TaskSolution.AppendLine("  f'(x0) ≈ Σ [ y[i] * Σ (1 / (x[i] - x[j])) * Π ((x0 - x[k]) / (x[i] - x[k])) ]");
+        TaskSolution.AppendLine("\nDetailed calculation breakdown:");
+        TaskSolution.AppendLine(derivativeBreakdown.ToString());
+
+        TaskResult = derivative;
     }
 
 }

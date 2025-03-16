@@ -36,6 +36,8 @@ internal class CentralDifferenceTask : BaseNumDifTask
         TaskSolution.Append($"f'({x}) ≈ (f({x} + {h}) - f({x} - {h})) / (2h)\n");
         TaskSolution.Append($"f'({x}) ≈ ({f_x_h} - {f_x_neg_h}) / (2 * {h})\n");
         TaskSolution.Append($"f'({x}) ≈ {derivative}\n");
+
+        TaskResult = derivative;
     }
 
 }

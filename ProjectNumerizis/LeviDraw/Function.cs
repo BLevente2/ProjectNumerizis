@@ -18,6 +18,7 @@ public class Function : IDisposable
     private const int NotHardMaxCacheSize = 5000;
     private int MaxCacheSize;
     private bool _disposed = false;
+    private Expr _derivativeExpression;
     public string Name { get; private set; }
     public Color FunctionColor { get; private set; }
     public bool Enabled { get; set; }
@@ -25,6 +26,10 @@ public class Function : IDisposable
     public bool HardToEvaluate { get; private set; }
     public Pen FunctionPen { get; private set; }
     public const int FunctionPenWidth = 2;
+
+    public string DerivativeFunction => _derivativeExpression.ToString();
+    public string FunctionExpression => _expression.ToString();
+
 
     public Function(string name, string function, Color functionColor)
     {
@@ -34,6 +39,7 @@ public class Function : IDisposable
         try
         {
             derivative = _expression.Differentiate("x");
+            _derivativeExpression = derivative;
         }
         catch
         {

@@ -17,5 +17,7 @@ internal abstract class BasicTask : ISimulatableTask
 
     internal abstract void Calculate();
 
-    public abstract Task Simulate(MainWindow mainWindow);
+    public abstract void Simulate(MainWindow mainWindow);
+
+    public abstract void EndSimulation(MainWindow mainWindow);
 }

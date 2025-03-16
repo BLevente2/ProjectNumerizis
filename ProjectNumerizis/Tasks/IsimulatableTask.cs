@@ -5,6 +5,7 @@ namespace ProjectNumerizis.Tasks;
 public interface ISimulatableTask
 {
 
-    public Task Simulate(MainWindow mainWindow);
+    public void Simulate(MainWindow mainWindow);
+    public void EndSimulation(MainWindow mainWindow);
 
 }

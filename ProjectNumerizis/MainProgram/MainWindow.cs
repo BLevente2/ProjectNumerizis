@@ -350,6 +350,50 @@ public partial class MainWindow : Form
         }
     }
 
+    public void AddFunction(Function function)
+    {
+        _coordinateSystem.Functions.Add(function);
+        _coordinateSystem.EnabledFunctions.Add(function);
+        CheckBox box = new CheckBox();
+        box.Text = $"{function.Name}(x) = {function.FunctionExpression}";
+        box.ForeColor = function.FunctionColor;
+        AddFunctionToList(box);
+        this.Invalidate();
+    }
+
+    public void RemoveFunction(Function function)
+    {
+        if (_coordinateSystem.Functions.Contains(function))
+        {
+            int index = _coordinateSystem.Functions.IndexOf(function);
+            CheckBox box = _functionsList[index];
+            FunctionsList.Controls.Remove(box);
+            _functionsList.Remove(box);
+
+            if (box.Checked)
+            {
+                _coordinateSystem.EnabledFunctions.Remove(function);
+            }
+            _coordinateSystem.Functions.Remove(function);
+            this.Invalidate();
+        }
+    }
+
+    public void AddPoint(PointData point)
+    {
+        _coordinateSystem.Points.Add(point);
+        this.Invalidate();
+    }
+
+    public void RemovePoint(PointData point)
+    {
+        if (_coordinateSystem.Points.Contains(point))
+        {
+            _coordinateSystem.Points.Remove(point);
+            this.Invalidate();
+        }
+    }
+
     private void AddFunctionToList(CheckBox box)
     {
         box.Checked = true;
